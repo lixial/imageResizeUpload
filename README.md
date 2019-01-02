@@ -2,7 +2,7 @@
 主要是使用react-cropper实现员工头像的剪裁、预览和上传功能
 
 实现功能如图：
-1.初始状态：https://github.com/lixial/imageResizeUpload/blob/master/img1.png
+![1.初始状态](https://github.com/lixial/imageResizeUpload/blob/master/img1.png)
 2.弹出选择文件窗口：https://github.com/lixial/imageResizeUpload/blob/master/img2.png
 3.文件剪裁与预览窗口：https://github.com/lixial/imageResizeUpload/blob/master/img3.png
 4.剪裁后上传图片成功显示状态：https://github.com/lixial/imageResizeUpload/blob/master/img4.png
