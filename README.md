@@ -9,7 +9,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css'
 
 第二步：
-提供上传按钮，实现onchange方法获取图片文件地址，传递给Cropper组件
+提供上传按钮，实现onChange方法获取图片文件地址，传递给Cropper组件
 <div className="img-left-area">
                             {
                                 this.state.imgFlag==true?
@@ -27,8 +27,8 @@ import 'cropperjs/dist/cropper.css'
                                 :
                                 <div class="image-container target" id="cropper-target">
                                     <input type="file" id="fileSelect" onChange={this.onChange} accept="image/*" key = {this.state.src} style={{"opacity":"0"}}/>
-                                    <Button type="button" class="u-button button" style={{"position": "relative","left": "-40px"}}onClick={this.fileClick}>{lang.template("选择文件")}</Button>
-                                    <p><span>{lang.template("只支持JPG、PNG、GIF，大小不超过5M")}</span></p>
+                                    <Button type="button" class="u-button button" style={{"position": "relative","left": "-40px"}}onClick={this.fileClick}>选择文件</Button>
+                                    <p><span>只支持JPG、PNG、GIF，大小不超过5M</span></p>
                                 </div>
                             }
                             </div>
@@ -59,7 +59,7 @@ import 'cropperjs/dist/cropper.css'
   第三步：
   设置右侧预览区域
                               <div className="img-right-area">
-                                <p>{lang.template("预览")}</p>
+                                <p>预览</p>
                                 <div class="image-container large" id="preview-large">
                                     <div class="image-wrapper">
                                         <img src="//cdn.yonyoucloud.com/pro/baseData/org-center/images/head-portrait3.png" className="noavatar" style={{height: '128px', width: '91.4px', display: 'none'}}/>
@@ -86,6 +86,57 @@ import 'cropperjs/dist/cropper.css'
   第4步：
   增加上传和取消按钮
                               <div className="img-footer-area">
-                                <Button type="button" class="u-button button brand_btn " color="brand" onClick={this.cropImage}>{lang.template("确定")}</Button>
-                                <Button type="button" class="u-button button default_btn " color="default" onClick={this.handleCancel}>{lang.template("取消")}</Button>
+                                <Button type="button" class="u-button button brand_btn " color="brand" onClick={this.cropImage}>确定</Button>
+                                <Button type="button" class="u-button button default_btn " color="default" onClick={this.handleCancel}>取消</Button>
                             </div>
+实现cropImage方法完成上传：
+cropImage = () => {
+	    if (typeof this.cropper.getCroppedCanvas() === 'undefined') {
+	      return;
+	    }
+	    let img64Data = this.cropper.getCroppedCanvas().toDataURL();
+	    let imgblobDate = this.convertBase64UrlToBlob(img64Data);
+	    this.submitUpload(imgblobDate);
+    }
+    //base64转二进制文件格式
+	convertBase64UrlToBlob(urlData) {
+		var bytes=window.atob(urlData.split(',')[1]);//去掉url的头，并转换为byte     
+	    //处理异常,将ascii码小于0的转换为大于0  
+	    var ab = new ArrayBuffer(bytes.length);  
+	    var ia = new Uint8Array(ab);  
+	    for (var i = 0; i < bytes.length; i++) {  
+	        ia[i] = bytes.charCodeAt(i);  
+	    }  	  
+	    return new Blob( [ab] , {type : 'image/png'});
+    }
+    //上传图片
+    submitUpload(imgBlob) {
+		let self = this;
+		let fd = new FormData();
+        fd.append('file', imgBlob);
+        //添加上传参数
+		for(let key in this.props.data) {
+			fd.append(key, this.props.data[key]);
+		}	
+		$.ajax({
+		    url: self.props.action,
+		    type: 'POST',
+		    data: fd,
+		    contentType: false,
+		    processData: false,
+		    dataType: 'json',
+		    success: function (data) {
+	    		if(self.props.onSuccess) {
+	    			self.props.onSuccess(data.data);
+	    		}
+	    		self.setState({
+                    show: false,
+                    imgFlag:false,
+	    			src: ''
+                })
+		    },
+		    error: function(err) {
+		    	self.props.onError(err)
+		    }
+		});
+	}
