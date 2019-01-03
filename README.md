@@ -1,9 +1,9 @@
 # imageResizeUpload
-主要是使用react-cropper实现员工头像的剪裁、预览和上传功能    
+## 主要是使用react-cropper实现员工头像的剪裁、预览和上传功能    
 
 
 
-实现功能如图：  
+## 实现功能如图：  
   
    
 
@@ -24,17 +24,20 @@
 ![剪裁后上传图片成功显示状态](https://github.com/lixial/imageResizeUpload/blob/master/img4.png)  
 
 
-具体步骤如下：  
+## 具体步骤如下：  
 
-第一步：  
+### 第一步：  
 
 引入插件和相应样式文件：
+```
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css'
+```
 
-第二步：  
+### 第二步：  
 
 提供上传按钮，实现onChange方法获取图片文件地址，传递给Cropper组件
+```
 <div className="img-left-area">
                             {
                                 this.state.imgFlag==true?
@@ -80,10 +83,12 @@ import 'cropperjs/dist/cropper.css'
 	    };
         reader.readAsDataURL(files[0]);
 	}
+```
   
-  第三步：  
+  ### 第三步：  
   
   设置右侧预览区域
+  ```
                               <div className="img-right-area">
                                 <p>预览</p>
                                 <div class="image-container large" id="preview-large">
@@ -108,10 +113,11 @@ import 'cropperjs/dist/cropper.css'
                                 </div>
                                 <p>23px x 32px</p>
                             </div>
-                            
-  第4步：  
+```                            
+  ### 第4步：  
   
   增加上传和取消按钮
+  ```
                               <div className="img-footer-area">
                                 <Button type="button" class="u-button button brand_btn " color="brand" onClick={this.cropImage}>确定</Button>
                                 <Button type="button" class="u-button button default_btn " color="default" onClick={this.handleCancel}>取消</Button>
@@ -167,3 +173,4 @@ cropImage = () => {
 		    }
 		});
 	}
+```
